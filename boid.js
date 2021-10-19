@@ -36,9 +36,38 @@ class Boid {
     return steering;
   }
 
+  cohesion(boids) {
+    let perception = 100;
+    let steering = createVector();
+    let total = 0;
+    for (let i of boids) {
+      let d = dist(
+        this.position.x,
+        this.position.y,
+        i.position.x,
+        i.position.y
+      );
+      if (i != this && d < perception) {
+        steering.add(i.position);
+        total++;
+      }
+    }
+    if (total > 0) {
+      steering.div(total);
+      steering.sub(this.position);
+      steering.setMag(this.maxSpeed);
+      steering.sub(this.velocity);
+      steering.limit(this.maxForce);
+    }
+    return steering;
+  }
+
+
   flock(boids) {
     let alignment = this.align(boids);
-    this.acceleration = alignment;
+    let cohesion = this.cohesion(boids);
+    this.acceleration.add(alignment);
+    this.acceleration.add(cohesion);
   }
 
   edges() {
@@ -60,6 +89,8 @@ class Boid {
   update() {
     this.position.add(this.velocity);
     this.velocity.add(this.acceleration);
+    this.velocity.limit(this.maxSpeed);
+    this.acceleration.mult(0);
   }
 
   show() {
