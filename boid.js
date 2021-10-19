@@ -62,10 +62,39 @@ class Boid {
     return steering;
   }
 
+  separation(boids) {
+    let perception = 80;
+    let steering = createVector();
+    let total = 0;
+    for (let i of boids) {
+      let d = dist(
+        this.position.x,
+        this.position.y,
+        i.position.x,
+        i.position.y
+      );
+      if (i != this && d < perception) {
+        let diff = p5.Vector.sub(this.position, i.position);
+        diff.div(d);
+        steering.add(diff);
+        total++;
+      }
+    }
+    if (total > 0) {
+      steering.div(total);
+      steering.setMag(this.maxSpeed);
+      steering.sub(this.velocity);
+      steering.limit(this.maxForce);
+    }
+    return steering;
+  }
+
 
   flock(boids) {
     let alignment = this.align(boids);
     let cohesion = this.cohesion(boids);
+    let separation = this.separation(boids);
+    this.acceleration.add(separation);
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
   }
