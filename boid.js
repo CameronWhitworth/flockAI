@@ -7,7 +7,8 @@ class Boid {
     this.velocity.setMag(random(2, 5));
     this.acceleration = createVector();
     this.maxForce = 0.2;
-    this.maxSpeed = 5;
+    this.maxSpeed = 10;
+    this.color = {r : random(50, 100), g : random(100, 255), b : random(150, 200)};
     this.r = 16;
   }
 
@@ -107,11 +108,11 @@ class Boid {
       this.position.x = width;
     }
 
-    if (this.position.y > width) {
+    if (this.position.y > height) {
       this.position.y = 0;
     }
     else if (this.position.y < 0) {
-      this.position.y = width;
+      this.position.y = height;
     }
   }
 
@@ -123,9 +124,9 @@ class Boid {
   }
 
   show() {
-    stroke(255);
+    stroke(this.color.r, this.color.g, this.color.b);
     strokeWeight(2);
-    fill(255);
+    fill(this.color.r, this.color.g, this.color.b);
     push();
     translate(this.position.x, this.position.y);
     rotate(this.velocity.heading());

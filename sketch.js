@@ -3,14 +3,14 @@
 const flock = [];
 
 function setup() {
-  createCanvas(1000, 1000);
+  createCanvas(window.innerWidth, window.innerHeight);
   for (let i = 0; i < 200; i++) {
     flock.push(new Boid());
   }  
 }
 
 function draw() {
-  background(51);
+  background(30); //comment out for cool effect
   for (let boid of flock) {
     boid.flock(flock);
     boid.update();
