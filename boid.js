@@ -9,7 +9,7 @@ class Boid {
     this.maxForce = 0.2;
     this.maxSpeed = 10;
     this.color = {r : random(50, 100), g : random(100, 255), b : random(150, 200)};
-    this.r = 16;
+    this.r = 5;
   }
 
   align(boids) {
@@ -88,6 +88,18 @@ class Boid {
       steering.limit(this.maxForce);
     }
     return steering;
+  }
+
+  check(o) {
+    if (dist(this.position.x, this.position.y, o.x, o.y) < o.r) {
+      let target = createVector(o.x, o.y);
+      let desire = p5.Vector.sub(target, this.position);
+      desire.setMag(this.maxSpeed);
+      let steer = p5.Vector.sub(desire, this.velocity);
+      steer.limit(this.maxSpeed);
+      steer.mult(-.5);
+      this.velocity = steer;
+    }
   }
 
 
